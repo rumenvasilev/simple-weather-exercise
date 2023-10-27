@@ -1,15 +1,8 @@
 $version: "2"
 namespace my.weather
 use aws.protocols#restJson1
-use custom.api#paginatedd
 
 /// Provides weather forecasts.
-@paginated(
-    inputToken: "page"
-    outputToken: "page"
-    pageSize: "per_page"
-)
-
 @restJson1
 service Weather {
     version: "2006-03-01"
@@ -38,7 +31,13 @@ structure NoSuchResource {}
 // return truncated results. We use our own custom trait, so `page`
 // field could be configured as integer instead of string.
 @readonly
-@paginatedd(items: "data")
+@suppress(["PaginatedTrait"])
+@paginated(
+    inputToken: "page"
+    outputToken: "page"
+    pageSize: "per_page"
+    items: "data"
+)
 @http(method: "GET", uri: "/forecast")
 operation GetForecast {
     input: GetForecastInput
